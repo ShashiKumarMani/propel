@@ -266,3 +266,99 @@ function visualizeMatchesWonPerVenue(matchesWonPerVenue, Venues) {
     series: seriesData
   });
 }
+
+const submitEl = document.querySelector('button');
+submitEl.addEventListener('click', fetchAndVisualizeEconomy);
+const errorEl = document.createElement('p');
+errorEl.textContent = "ERROR : Enter a value between 2008 and 2019";
+errorEl.classList.add("error");
+errorEl.style.color = "red";
+
+let year;
+
+function fetchAndVisualizeEconomy(even) {
+  even.preventDefault();
+  const inputEl = document.querySelector('#year');
+
+  year = inputEl.value;
+
+  if(year >= 2008 && year <= 2019)
+  {
+    let tempEl = document.querySelector('.error');
+    if(tempEl != null)
+    {
+      tempEl.remove();
+    }
+    fetchAndVisualizeEcoData(inputEl.value);
+  }
+  else
+  {
+    document.querySelector('div').innerHTML = "";
+    document.querySelector('form').appendChild(errorEl);
+  }
+}
+
+function fetchAndVisualizeEcoData() {
+  fetch("./data.json")
+    .then(r => r.json())
+    .then(visualizeTopEconomicBowlersYear);
+}
+
+function visualizeTopEconomicBowlersYear(data) {
+  const topEconomicBowlers = data.topEconomicBowlersAllYears[year];
+  console.log("topEconomicBowlers", year, topEconomicBowlers);
+  const economyData = [];
+  for (let bowler in topEconomicBowlers) {
+    economyData.push([bowler, (topEconomicBowlers[bowler])]);
+  }
+
+  Highcharts.chart('economy', {
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: '4. Top economic bowlers in ' + year + ' season'
+    },
+    subtitle: {
+      text: 'Source: <a href="https://www.kaggle.com/nowke9/ipldata/data">IPL Dataset</a>'
+    },
+    xAxis: {
+      type: 'category',
+      labels: {
+        rotation: -45,
+        style: {
+          fontSize: '13px',
+          fontFamily: 'Verdana, sans-serif'
+        }
+      }
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: 'Economy'
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    tooltip: {
+      pointFormat: 'Population in 2017: <b>{point.y:.1f} millions</b>'
+    },
+    series: [{
+      name: 'Bowlers',
+      data: economyData,
+      dataLabels: {
+        enabled: true,
+        rotation: -90,
+        color: '#FFFFFF',
+        align: 'right',
+        format: '{point.y:.1f}', // one decimal
+        y: 10, // 10 pixels down from the top
+        style: {
+          fontSize: '13px',
+          fontFamily: 'Verdana, sans-serif'
+        }
+      }
+    }]
+  });
+}

@@ -15,6 +15,12 @@
 <body>
     <h1>IPL Dataset visualization</h1>
 
+    <form action="/economy" method="GET">
+        <label for="year">Enter the year <input id="year" type="number" min="2008" max="2019" name="year"></label>
+        <button type="submit">Submit</button>
+    </form>
+    
+    <div id="economy" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="matches-played-per-year" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="matches-won-per-year" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
     <div id="extra-runs-scored" style="min-width: 310px; height: 500px; margin: 0 auto"></div>
