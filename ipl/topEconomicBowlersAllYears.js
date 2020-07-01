@@ -47,29 +47,11 @@ function topEconomicBowlersWithYear(matches, deliveries, year) {
 
     economyData = economyData.slice(0,10);
 
-    //console.log(economyData);
-
     let finalObj = {};
 
     economyData.map(function(val){finalObj[val[0]] = val[1];})
 
-    //console.log(year, finalObj);
     return finalObj;
-  }
-  
-function topEconomicBowlersAllYears(matches, deliveries)
-{
-    let resultObject = new Object();
-
-    let years = ['2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019']
-
-    for(let i = 0;i < years.length;i++)
-    {
-        resultObject[years[i]] = topEconomicBowlersWithYear(matches, deliveries, years[i]);
-    }
-    //console.log(resultObject);
-
-    return resultObject;
 }
-  module.exports = topEconomicBowlersAllYears;
-  //module.exports = topEconomicBowlersWithYear;
+
+module.exports = topEconomicBowlersWithYear;

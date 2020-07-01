@@ -1,3 +1,4 @@
+
 function fetchAndVisualizeData() {
   fetch("./data.json")
     .then(r => r.json())
@@ -267,46 +268,68 @@ function visualizeMatchesWonPerVenue(matchesWonPerVenue, Venues) {
   });
 }
 
+
 const submitEl = document.querySelector('button');
 submitEl.addEventListener('click', fetchAndVisualizeEconomy);
 const errorEl = document.createElement('p');
 errorEl.textContent = "ERROR : Enter a value between 2008 and 2019";
 errorEl.classList.add("error");
 errorEl.style.color = "red";
+const loadingEl = document.createElement('p');
+loadingEl.textContent = "LOADING...";
+loadingEl.classList.add('loading');
 
 let year;
 
 function fetchAndVisualizeEconomy(even) {
+  console.log("Button clicked")
   even.preventDefault();
   const inputEl = document.querySelector('#year');
 
   year = inputEl.value;
+  console.log("Submitted year", year);
 
   if(year >= 2008 && year <= 2019)
   {
     let tempEl = document.querySelector('.error');
+
     if(tempEl != null)
     {
       tempEl.remove();
     }
-    fetchAndVisualizeEcoData(inputEl.value);
+    document.querySelector('div').innerHTML = "";
+    document.querySelector('form').appendChild(loadingEl);
+    fetchAndVisualizeEcoData(year);
   }
   else
   {
+    let tempEl = document.querySelector('.loading');
+    if(tempEl != null)
+    {
+      tempEl.remove();
+    }
     document.querySelector('div').innerHTML = "";
     document.querySelector('form').appendChild(errorEl);
   }
 }
 
-function fetchAndVisualizeEcoData() {
-  fetch("./data.json")
+function fetchAndVisualizeEcoData(year) {
+  console.log("FETCH : JSON FILE");
+  let url = "/economy?year=" + year;
+  fetch(url)
     .then(r => r.json())
     .then(visualizeTopEconomicBowlersYear);
+
+  console.log("fetch end");
 }
 
 function visualizeTopEconomicBowlersYear(data) {
-  const topEconomicBowlers = data.topEconomicBowlersAllYears[year];
-  console.log("topEconomicBowlers", year, topEconomicBowlers);
+  const tempEl = document.querySelector('.loading');
+  if(tempEl != null)
+    tempEl.remove();
+
+  const topEconomicBowlers = data;
+  console.log("topEconomicBowlers", topEconomicBowlers);
   const economyData = [];
   for (let bowler in topEconomicBowlers) {
     economyData.push([bowler, (topEconomicBowlers[bowler])]);
